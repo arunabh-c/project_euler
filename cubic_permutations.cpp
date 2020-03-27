@@ -10,7 +10,8 @@ class cubic_permutations
     int ans = 1;
 	//std::vector<lli> cube_array;
     
-std::vector<int> X = {0,1,2,3};
+	lli X_num = 1023;
+	std::vector<int> X = {0,1,2,3};
 	
     void permutate_array(std::vector<int> x, lli sum)
 	{
@@ -34,30 +35,32 @@ std::vector<int> X = {0,1,2,3};
 		}
 		return;
 	}
-    /*void permutate_number(lli x, lli sum, int power_of_10)
+    void permutate_number(lli x, lli sum, lli power_of_10)
 	{
-		lli new_sum;
 		
-		for (int i =0;i<power_of_10; i++)
+		lli new_sum = 0;
+		for (int i =power_of_10; i >= 0; i--)
 		{
-			lli next_x = x;
-			new_sum = sum + (int(x/power_of_10))*power_of_10;
-			next_x.erase(next_x.begin() + i);
-			if (power_of_10 > 0)
+			int digit = (int(x/pow(10,i)))%10;
+			if (digit != 0)
 			{
-				permutate_number(next_x, new_sum, power_of_10-1);			
+				new_sum = sum + digit*pow(10,i);
+				int next_x = x - digit*pow(10,i);
+				//std::cout<<"x: "<<x<<", digit: "<<digit<<", next_x: "<<next_x<<", new_sum: "<<new_sum<<std::endl;
+				permutate_number(next_x,new_sum,i-1);
 			}
 		}
-		if (power_of_10 < 2)
+		if (power_of_10 < 1)
 		{
 			std::cout<<new_sum<<", ";						
 		}
 		return;
-	}*/
+	}
 	public:    
     void do_cubic_permutations()
     {
-		permutate_array(X,0);
+		//permutate_array(X,0);
+		permutate_number(X_num,0,3);
 		long long int cube = 0;
 		for (int i =5; i < max; i++)
 		{
