@@ -10,58 +10,46 @@ class cubic_permutations
     int ans = 1;
 	//std::vector<lli> cube_array;
     
-	lli X_num = 1023;
-	std::vector<int> X = {0,1,2,3};
-	
-    void permutate_array(std::vector<int> x, lli sum)
+	lli X = 1203044;
+
+    void permutate_number(lli x, lli sum, int power_of_10)
 	{
-		lli new_sum;
-		for (int i =0;i<x.size(); i++)
-		{
-			if (!(sum == 0 && x[i] == 0))
-			{
-				std::vector<int> next_x = x;
-				new_sum = sum + x[i]*pow(10,x.size()-1);
-				next_x.erase(next_x.begin() + i);
-				if (next_x.size() > 0)
-				{
-					permutate_array(next_x, new_sum);			
-				}
-			}
-		}
-		if (x.size() < 2)
-		{
-			std::cout<<new_sum<<", ";						
-		}
-		return;
-	}
-    void permutate_number(lli x, lli sum, lli power_of_10)
-	{
-		
 		lli new_sum = 0;
+		int id = rand();
 		for (int i =power_of_10; i >= 0; i--)
 		{
 			int digit = (int(x/pow(10,i)))%10;
-			if (digit != 0)
+			//std::cout<<"id: "<<id<<", i: "<<i<<", x: "<<x<<", digit: "<<digit<<", sum: "<<sum<<std::endl;
+			if (!(sum == 0 && digit == 0))
 			{
-				new_sum = sum + digit*pow(10,i);
-				int next_x = x - digit*pow(10,i);
-				//std::cout<<"x: "<<x<<", digit: "<<digit<<", next_x: "<<next_x<<", new_sum: "<<new_sum<<std::endl;
-				permutate_number(next_x,new_sum,i-1);
+				new_sum = sum + digit*pow(10,power_of_10);
+				int next_x = (x/(int(pow(10,i+1))))*pow(10,i) + x%((int)pow(10,i));
+				//std::cout<<"id: "<<id<<", i: "<<i<<", x: "<<x<<", increment: "<<digit*pow(10,power_of_10)<<", next_x: "<<next_x<<", new_sum: "<<new_sum<<std::endl;
+				if (next_x > 0)
+				{
+					permutate_number(next_x,new_sum,std::max(0,power_of_10-1));					
+				}
 			}
 		}
-		if (power_of_10 < 1)
+		if (power_of_10 == 0)
 		{
-			std::cout<<new_sum<<", ";						
+			std::cout<<"final sum: "<<new_sum<<std::endl;						
 		}
 		return;
 	}
 	public:    
     void do_cubic_permutations()
     {
-		//permutate_array(X,0);
-		permutate_number(X_num,0,3);
+		int power_of_X= 0;
+		while (X/pow(10,power_of_X) > 10)
+		{
+			power_of_X++;
+		}
+		
+		permutate_number(X,0,power_of_X);
+		
 		long long int cube = 0;
+		
 		for (int i =5; i < max; i++)
 		{
 			cube = pow(i,3);
