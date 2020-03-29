@@ -66,7 +66,7 @@ class cubic_permutations
 		return pow_of_X;
 	}
 	
-	bool is_cube(lli cube)
+	bool is_cube(lli cube)//https://math.stackexchange.com/questions/1400263/how-to-make-this-cubic-root-c-algorithm-faster
 	{
 		long double cube_root = pow(cube, (1.0/3.0));
 		std::cout<<"cube: "<<cube<<", long double cube root: "<<cube_root*1000000<<", lli(cube_root): "<<lli(cube_root)*1000000 <<", equality: "<<(lli(cube_root*1000000) == cube_root*1000000)<<std::endl;
