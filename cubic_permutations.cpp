@@ -1,6 +1,8 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include<set>
+#include <algorithm>
 #include <chrono>
 using lli = long long int;
 
@@ -8,10 +10,11 @@ class cubic_permutations
 {
     int max = 20;//80000;
     int ans = 1;
-	//std::vector<lli> cube_array;
-    
-	lli X = 1203044;
-
+	int root = 5;
+	std::vector<lli> cube_array;
+	std::set<lli> answer_set;
+	//int cube_permutation_counter;
+	
     void permutate_number(lli x, lli sum, int power_of_10)
 	{
 		lli new_sum = 0;
@@ -33,28 +36,52 @@ class cubic_permutations
 		}
 		if (power_of_10 == 0)
 		{
-			std::cout<<"final sum: "<<new_sum<<std::endl;						
+			if (cube_array.size() > 1 && std::find(cube_array.begin(), cube_array.end(), new_sum) != cube_array.end())
+			{
+				lli ans_cube = pow(root,3);
+				std::cout<<"Match found: "<<new_sum<<", root: "<<root<<", cube: "<<ans_cube<<std::endl;
+				answer_set.insert(new_sum);
+				answer_set.insert(ans_cube);
+			}
+			//std::cout<<new_sum<<", ";						
 		}
 		return;
 	}
+
+	int power_of_X(lli x)
+	{
+		int pow_of_X= 0;
+		while (x/pow(10,pow_of_X) > 10)
+		{
+			pow_of_X++;
+		}
+		return pow_of_X;
+	}
+
 	public:    
     void do_cubic_permutations()
     {
-		int power_of_X= 0;
-		while (X/pow(10,power_of_X) > 10)
-		{
-			power_of_X++;
-		}
-		
-		permutate_number(X,0,power_of_X);
-		
 		long long int cube = 0;
+		int power, prev_power;
 		
-		for (int i =5; i < max; i++)
+		 while (answer_set.size() < 4)
 		{
-			cube = pow(i,3);
-			//std::cout<<cube<<std::endl;
+			//cube_permutation_counter = 1;
+			answer_set.clear();
+			cube = pow(root,3);
+			power = power_of_X(cube);
+			if (prev_power != power)
+			{
+				cube_array.clear();
+				//std::cout<<"cube array reset"<<std::endl;
+			}
+			prev_power = power;
+			permutate_number(cube,0,power);
+			cube_array.push_back(cube);
+			//std::cout<<"root: "<<root<<", cube: "<<cube<<", answer_set.size(): "<<answer_set.size()<<std::endl;
+			root++;
 		}
+		std::cout<<"Ans: "<<root<<std::endl;
 	}
     
     int get_cubic_permutations()
