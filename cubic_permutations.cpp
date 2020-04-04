@@ -1,7 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
-#include<set>
+#include <set>
 #include <algorithm>
 #include <chrono>
 #include <iomanip>      // std::setprecision
@@ -13,14 +13,14 @@ class cubic_permutations
     int max = 20;//80000;
     int ans = 1;
 	int root = 5;
-	std::vector<lli> cube_array;
-	std::set<int> answer_set;
+	std::set<lli> cube_array;
+	std::set<lli> answer_set;
 	int cube_permutation_counter;
 	
     void permutate_number(lli x, lli sum, int power_of_10)
 	{
 		lli new_sum = 0;
-		int id = rand();
+		//int id = rand();
 		for (int i =power_of_10; i >= 0; i--)
 		{
 			int digit = (int(x/pow(10,i)))%10;
@@ -36,24 +36,22 @@ class cubic_permutations
 				}
 			}
 		}
-		if (power_of_10 == 0)
+		if (power_of_10 == 0 )
 		{
-			if (is_cube(new_sum))//(cube_array.size() > 1 && std::find(cube_array.begin(), cube_array.end(), new_sum) != cube_array.end())
+			if (is_cube(new_sum))
 			{
-				//lli ans_cube = pow(root,3);
-				//std::cout<<"Match found: "<<new_sum<<", root: "<<pow(new_sum, (1.0/3.0))<<", cube: "<<ans_cube<<std::endl;
-				//std::cout<<answer_set.size()<<std::endl;
-				answer_set.insert(pow(new_sum, (1.0/3.0)));
-				/*std::cout<<answer_set[0]<<", "<<answer_set[1]<<", "<<answer_set[2]<<std::endl;
-				std::set<int>::iterator setIt = answer_set.begin();
-				for(int i = 0; i < answer_set.size(); i++)
+				answer_set.insert(new_sum);
+				if (answer_set.size() > 2)
 				{
-					setIt++;
-					std::cout<<*setIt<<", ";
+					std::cout<<"Match found: answer_set.size(): "<<answer_set.size()<<", root: "<<root<<", number found: "<<pow(new_sum, (1.0/3.0))<<std::endl;					
+					std::set<lli>::iterator setIt;
+					for(setIt  = answer_set.begin(); setIt != answer_set.end(); ++setIt)
+					{
+						std::cout<<*setIt<<", ";
+					}
+					std::cout<<std::endl;
 				}
-				std::cout<<std::endl;*/
-			}
-			//std::cout<<new_sum<<", ";						
+			}			
 		}
 		return;
 	}
@@ -61,20 +59,42 @@ class cubic_permutations
 	int power_of_X(lli x)
 	{
 		int pow_of_X= 0;
-		while (x/pow(10,pow_of_X) > 10)
+		while (x/pow(10,pow_of_X) >= 10)
 		{
 			pow_of_X++;
 		}
 		return pow_of_X;
 	}
 	
+	bool is_digital_root_cube(lli cube)
+	{
+		int sum = 0;
+		while (cube > 0)
+		{
+			sum += cube%10;
+			cube = cube/10;
+			if (cube == 0 && sum >= 10)
+			{
+				cube = sum;
+				sum = 0;
+			}
+		}
+		//std::cout<<"sum: "<<sum<<std::endl;
+		if (sum == 0 || sum == 1 || sum == 8 || sum == 9)
+		{return true;}
+		return false;
+	}
+	
 	bool is_cube(lli cube)//https://math.stackexchange.com/questions/1400263/how-to-make-this-cubic-root-c-algorithm-faster
 	{
-		lli cube_root = round(pow(cube, (1.0/3.0))) ;
-		lli derived_cube = pow(cube_root,3) ;
-		//std::cout<<"cube: "<<cube<<", long double cube root: "<<cube_root<<", derived_cube: "<<derived_cube<<", equality: "<<(derived_cube - cube)<<std::endl;
-		if (derived_cube - cube  == 0)
-		{return true;}
+		if (true)//is_digital_root_cube(cube))
+		{
+			lli cube_root = round(pow(cube, (1.0/3.0))) ;
+			lli derived_cube = pow(cube_root,3) ;
+			//std::cout<<"cube: "<<cube<<", long double cube root: "<<cube_root<<", derived_cube: "<<derived_cube<<", equality: "<<(derived_cube - cube)<<std::endl;
+			if (derived_cube - cube  == 0)
+			{return true;}
+		}
 	return false;
 	}
 	
@@ -106,48 +126,17 @@ class cubic_permutations
     {
 		long long int cube = 0;
 		int power, prev_power;
-		/*std::cout<<is_cube(54872002)<<std::endl;
-		std::cout<<is_cube(41063625)<<std::endl;
-		std::cout<<is_cube(56623104)<<std::endl;
-		std::cout<<is_cube(66430125)<<std::endl;*/
-		while (answer_set.size() < 6)
+		
+		while (answer_set.size() < 5)
 		{
-			cube_permutation_counter = 1;
 			answer_set.clear();
-			answer_set.insert(root);
-			//std::cout<<root<<std::endl;
-			std::set<int>::iterator setIt = answer_set.begin();
-			//for(int i = 0; i < answer_set.size(); i++)
-			//{
-			//	setIt++;
-			//	std::cout<<*setIt<<", ";
-			//}
-			//std::cout<<std::endl;
 			cube = pow(root,3);
+			answer_set.insert(cube);
 			power = power_of_X(cube);
-			//if (prev_power != power)
-			//{
-			//	cube_array.clear();
-			//  std::cout<<"cube array reset"<<std::endl;
-			//}
-			//prev_power = power;
 			permutate_number(cube,0,power);
-			//cube_array.push_back(cube);
-			//std::cout<<"root: "<<root<<", cube: "<<cube<<", answer_set.size(): "<<answer_set.size()<<std::endl;
 			root++;
-		}
-		//std::cout<<answer_set.size()<<std::endl;
-		std::set<int>::iterator setIt = answer_set.begin();
-		for(int i = 0; i < answer_set.size(); i++)
-		{
-			setIt++;
-			std::cout<<*setIt<<", ";
-		}
-		std::cout<<std::fixed<<"Ans: "<<pow(root-1,3)<<std::endl;
-		//std::cout<<is_cube(27)<<std::endl;
-		//std::cout<<is_cube(8)<<std::endl;
-		//std::cout<<is_cube(29)<<std::endl;
-
+		}	
+		std::cout<<std::fixed<<"Ans: "<<root-1<<", answer_Set.size(): "<<answer_set.size()<<std::endl;
 	}
     
     int get_cubic_permutations()
