@@ -4,6 +4,8 @@
 #include<set>
 #include <algorithm>
 #include <chrono>
+#include <iomanip>      // std::setprecision
+
 using lli = long long int;
 
 class cubic_permutations
@@ -36,20 +38,20 @@ class cubic_permutations
 		}
 		if (power_of_10 == 0)
 		{
-			if (is_cube(new_sum))//(cube_array.size() > 1 && std::find(cube_array.begin(), cube_array.end(), new_sum) != cube_array.end())
+			if (is_cube_recursive(new_sum))//(cube_array.size() > 1 && std::find(cube_array.begin(), cube_array.end(), new_sum) != cube_array.end())
 			{
-				lli ans_cube = pow(root,3);
-				std::cout<<"Match found: "<<new_sum<<", root: "<<pow(new_sum, (1.0/3.0))<<", cube: "<<ans_cube<<std::endl;
+				//lli ans_cube = pow(root,3);
+				//std::cout<<"Match found: "<<new_sum<<", root: "<<pow(new_sum, (1.0/3.0))<<", cube: "<<ans_cube<<std::endl;
 				//std::cout<<answer_set.size()<<std::endl;
 				answer_set.insert(pow(new_sum, (1.0/3.0)));
-				//std::cout<<answer_set[0]<<", "<<answer_set[1]<<", "<<answer_set[2]<<std::endl;
+				/*std::cout<<answer_set[0]<<", "<<answer_set[1]<<", "<<answer_set[2]<<std::endl;
 				std::set<int>::iterator setIt = answer_set.begin();
 				for(int i = 0; i < answer_set.size(); i++)
 				{
 					setIt++;
 					std::cout<<*setIt<<", ";
 				}
-				std::cout<<std::endl;
+				std::cout<<std::endl;*/
 			}
 			//std::cout<<new_sum<<", ";						
 		}
@@ -68,35 +70,58 @@ class cubic_permutations
 	
 	bool is_cube(lli cube)//https://math.stackexchange.com/questions/1400263/how-to-make-this-cubic-root-c-algorithm-faster
 	{
-		long double cube_root = pow(cube, (1.0/3.0));
+		long double cube_root = pow((long double)cube, (1.0/3.0));
 		std::cout<<"cube: "<<cube<<", long double cube root: "<<cube_root*1000000<<", lli(cube_root): "<<lli(cube_root)*1000000 <<", equality: "<<(lli(cube_root*1000000) == cube_root*1000000)<<std::endl;
 		if (lli(cube_root*1000000) == cube_root*1000000)
 		{return true;}
 	return false;
 	}
+	
+	
+	bool is_cube_recursive(lli cube)
+	{
+		long double cube_root = cube* 0.01;
+		long double  cube_root_prev = 0.0;
+		float eps = 0.0000000001;
+		float diff = 99.99;
+		int ctr = 0;
+		while (diff > eps && ctr < 500)
+		{
+			cube_root_prev = cube_root;;
+			cube_root  = cube_root_prev  - ( pow(cube_root_prev,3.0) - (long double)(cube)) / (3.0 * cube_root_prev * cube_root_prev);
+			//std::cout<<std::setprecision(9)<<cube_root<<", "<<abs(cube_root - cube_root_prev)<<std::endl;
+			diff = abs(cube_root - cube_root_prev); 
+			ctr++;
+		}
+		//std::cout<<"cube: "<<cube<<", long double cube root: "<<cube_root<<", long double cube_root_prev: "<<cube_root_prev<<std::endl;//", equality: "<<(lli(cube_root*1000000) == cube_root*1000000)<<std::endl;
+		if (lli(cube_root*1000000) == cube_root*1000000)
+		{return true;}
+	return false;
+	}
+	
 
 	public:    
     void do_cubic_permutations()
     {
 		long long int cube = 0;
 		int power, prev_power;
-		is_cube(54872002);
-		is_cube(41063625);
-		is_cube(56623104);
-		is_cube(66430125);
-		 /*while (answer_set.size() < 3)
+		//std::cout<<is_cube(54872002)<<std::endl;
+		//std::cout<<is_cube(41063625)<<std::endl;
+		//std::cout<<is_cube(56623104)<<std::endl;
+		//std::cout<<is_cube(66430125)<<std::endl;
+		 while (answer_set.size() < 4)
 		{
 			cube_permutation_counter = 1;
 			answer_set.clear();
-			//answer_set.insert(root);
+			answer_set.insert(root);
 			std::cout<<root<<std::endl;
 			std::set<int>::iterator setIt = answer_set.begin();
-			for(int i = 0; i < answer_set.size(); i++)
-			{
-				setIt++;
-				std::cout<<*setIt<<", ";
-			}
-			std::cout<<std::endl;
+			//for(int i = 0; i < answer_set.size(); i++)
+			//{
+			//	setIt++;
+			//	std::cout<<*setIt<<", ";
+			//}
+			//std::cout<<std::endl;
 			cube = pow(root,3);
 			power = power_of_X(cube);
 			//if (prev_power != power)
@@ -109,7 +134,7 @@ class cubic_permutations
 			//cube_array.push_back(cube);
 			//std::cout<<"root: "<<root<<", cube: "<<cube<<", answer_set.size(): "<<answer_set.size()<<std::endl;
 			root++;
-		}*/
+		}
 		//std::cout<<answer_set.size()<<std::endl;
 		std::set<int>::iterator setIt = answer_set.begin();
 		for(int i = 0; i < answer_set.size(); i++)
